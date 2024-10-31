@@ -8,7 +8,7 @@ export const useKeyboardMovement = () => {
   const {
     components: { MapConfig, Position, Movable },
     network: { playerEntity },
-    systemCalls: { move: moveSystemCall },
+    systemCalls: { move },
   } = useMUD();;
 
   const mapConfig = useComponentValue(MapConfig, playerEntity);
@@ -24,7 +24,7 @@ export const useKeyboardMovement = () => {
 
   const movable = useComponentValue(Movable, playerEntity);
 
-  const move = useCallback(debounce(moveSystemCall, 100), [moveSystemCall]);
+  //const move = useCallback(debounce(moveSystemCall, 100), [moveSystemCall]);
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {

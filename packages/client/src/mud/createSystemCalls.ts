@@ -5,8 +5,13 @@ import { SetupNetworkResult } from "./setupNetwork";
 import { Direction } from "../utils/direction";
 import { Hex } from "viem";
 import { hexToArray } from "@latticexyz/utils";
+import { resourceToHex } from "@latticexyz/common";
+import { BatchProcessingQueue } from "./BatchProcessingQueue";
+import { encodeFunctionData } from "viem";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
+
+
 
 export function createSystemCalls(
   { playerEntity, worldContract, waitForTransaction }: SetupNetworkResult,
@@ -18,6 +23,37 @@ export function createSystemCalls(
     Position,
   }: ClientComponents
 ) {
+
+
+  const moveBatchQueue = new BatchProcessingQueue<Direction>(1000, async (batch: Direction[]) => {
+
+    const resourceId = resourceToHex({
+      type: "system",
+      namespace: "",
+      name: "MapSystem",
+    });
+
+    const tasks = batch.map((direction) => {
+      const data = encodeFunctionData({
+        abi: worldContract.abi,
+        functionName: "move",
+        args: [direction],
+      });
+
+      return [resourceId, data];
+    });
+
+    try {
+      const tx = worldContract.write.batchCall([tasks]);
+      await waitForTransaction(tx);
+    } finally {
+      //batch.forEach(([direction, overrideId, isWinner]) => {
+      //  Position.removeOverride(overrideId);
+      //});
+    }
+
+  });
+
   const wrapPosition = (x: number, y: number) => {
     const mapConfig = getComponentValue(MapConfig, playerEntity);
     if (!mapConfig) {
@@ -88,34 +124,30 @@ export function createSystemCalls(
       return;
     }
 
-    const overrideId = uuid();
-    if (!isWinner) {
-      Position.addOverride(overrideId, {
-        entity: playerEntity,
-        value: { x, y },
-      });
-    } else {
-      Winner.addOverride(overrideId, {
-        entity: playerEntity,
-        value: { value: true },
-      });
-    }
 
     try {
-      const tx = await worldContract.write.move([direction]);
-      await waitForTransaction(tx);
-    } finally {
       if (!isWinner) {
-        Position.removeOverride(overrideId);
-      } else {
-        Winner.removeOverride(overrideId);
+        const overrideId = uuid();
+        Position.addOverride(overrideId, {
+          entity: playerEntity,
+          value: { x, y },
+        });
       }
+      moveBatchQueue.addItem(direction);
+      //const tx = await worldContract.write.move([direction]);
+      //await waitForTransaction(tx);
+      console.log("Added to batch queue: ", direction);
+    } finally {
     }
   };
 
   const setMap = async (width: number, height: number, terrain: Hex) => {
     const tx = await worldContract.write.setMap([width, height, terrain]);
     await waitForTransaction(tx);
+    Position.addOverride(uuid(), {
+      entity: playerEntity,
+      value: { x: 1, y: 0 },
+    });
   };
 
   return {
