@@ -1,14 +1,10 @@
 import { useComponentValue, useEntityQuery } from "@latticexyz/react";
 import { GameMap } from "./GameMap";
-import { useMUD } from "./MUDContext";
-import { useKeyboardMovement } from "./useKeyboardMovement";
+import { useMUD } from "../contexts/MUDContext";
+import { useKeyboardMovement } from "../hooks/useKeyboardMovement";
 import { hexToArray } from "@latticexyz/utils";
-import { TerrainType, terrainTypes } from "./terrainTypes";
+import { TerrainType, terrainTypes } from "../utils/terrainTypes";
 import { Entity, Has, getComponentValueStrict } from "@latticexyz/recs";
-import { EncounterScreen } from "./EncounterScreen";
-import { MonsterType, monsterTypes } from "./monsterTypes";
-import { MazeGenerator } from "./mazeGenerator";
-import { useState } from "react";
 
 export const GameBoard = () => {
   useKeyboardMovement();
@@ -16,20 +12,8 @@ export const GameBoard = () => {
   const {
     components: { Encounter, MapConfig, Monster, Player, Position, Winner },
     network: { playerEntity },
-    systemCalls: { spawn, setMap },
+    systemCalls: { spawn },
   } = useMUD();
-
-  const canSpawn = useComponentValue(Player, playerEntity)?.value !== true;
-
-  const players = useEntityQuery([Has(Player), Has(Position)]).map((entity) => {
-    const position = getComponentValueStrict(Position, entity);
-    return {
-      entity,
-      x: position.x,
-      y: position.y,
-      emoji: entity === playerEntity ? "🤠" : "🥸",
-    };
-  });
 
   const mapConfig = useComponentValue(MapConfig, playerEntity);
   if (mapConfig == null) {
@@ -60,12 +44,6 @@ export const GameBoard = () => {
     encounter ? (encounter.monster as Entity) : undefined
   )?.value;
 
-  const monster =
-    monsterType != null && monsterType in MonsterType
-      ? monsterTypes[monsterType as MonsterType]
-      : null;
-
-
   return (
     <div className="relative flex flex-col items-center gap-4 bg-green-500 p-8 rounded-lg">
       {winner?.value === true ? (
@@ -77,16 +55,6 @@ export const GameBoard = () => {
           width={width}
           height={height}
           terrain={terrain}
-          onTileClick={canSpawn ? spawn : undefined}
-          players={players}
-          encounter={
-            encounter ? (
-              <EncounterScreen
-                monsterName={monster?.name ?? "MissingNo"}
-                monsterEmoji={monster?.emoji ?? "💱"}
-              />
-            ) : undefined
-          }
         />
       )}
     </div>

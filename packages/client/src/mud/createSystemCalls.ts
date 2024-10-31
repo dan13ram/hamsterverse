@@ -1,10 +1,8 @@
-import { Has, HasValue, getComponentValue, runQuery } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { getComponentValue } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
 import { SetupNetworkResult } from "./setupNetwork";
-import { Direction } from "../direction";
-import { MonsterCatchResult } from "../monsterCatchResult";
+import { Direction } from "../utils/direction";
 import { Hex } from "viem";
 import { hexToArray } from "@latticexyz/utils";
 
@@ -13,10 +11,7 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 export function createSystemCalls(
   { playerEntity, worldContract, waitForTransaction }: SetupNetworkResult,
   {
-    Encounter,
     MapConfig,
-    MonsterCatchAttempt,
-    Obstruction,
     Winner,
     Player,
     Position,
@@ -42,7 +37,7 @@ export function createSystemCalls(
 
     return Array.from(hexToArray(terrainData)).some((value, index) => {
       const thisX = index % width;
-      const thisY = Math.floor(index / width);
+      const thisY = Math.floor(index / height);
       const isObstruction = value > 0;
       return thisX === x && thisY === y && isObstruction;
     });
@@ -153,34 +148,6 @@ export function createSystemCalls(
     }
   };
 
-  const throwBall = async () => {
-    const player = playerEntity;
-    if (!player) {
-      throw new Error("no player");
-    }
-
-    const encounter = getComponentValue(Encounter, player);
-    if (!encounter) {
-      throw new Error("no encounter");
-    }
-
-    const tx = await worldContract.write.throwBall();
-    await waitForTransaction(tx);
-
-    const catchAttempt = getComponentValue(MonsterCatchAttempt, player);
-    if (!catchAttempt) {
-      throw new Error("no catch attempt found");
-    }
-
-    return catchAttempt.result as MonsterCatchResult;
-  };
-
-  const newMap = async () => {
-    const tx = await worldContract.write.newMap([20, 20]);
-    await waitForTransaction(tx);
-    return tx;
-  };
-
   const setMap = async (width: number, height: number, terrain: Hex) => {
     const tx = await worldContract.write.setMap([width, height, terrain]);
     await waitForTransaction(tx);
@@ -194,9 +161,6 @@ export function createSystemCalls(
   return {
     move,
     spawn,
-    throwBall,
-    fleeEncounter,
-    newMap,
     setMap,
   };
 }

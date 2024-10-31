@@ -1,20 +1,11 @@
 import { useEffect } from "react";
-import { useMUD } from "./MUDContext";
-import { Direction } from "./direction";
-import { useComponentValue, useEntityQuery } from "@latticexyz/react";
-import { GameMap } from "./GameMap";
-import { hexToArray } from "@latticexyz/utils";
-import { TerrainType, terrainTypes } from "./terrainTypes";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Entity, Has, getComponentValueStrict } from "@latticexyz/recs";
-import { EncounterScreen } from "./EncounterScreen";
-import { MonsterType, monsterTypes } from "./monsterTypes";
-import { MazeGenerator } from "./mazeGenerator";
-import { useState } from "react";
+import { useMUD } from "../contexts/MUDContext";
+import { Direction } from "../utils/direction";
+import { useComponentValue } from "@latticexyz/react";
 
 export const useKeyboardMovement = () => {
   const {
-    components: { Encounter, MapConfig, Monster, Player, Position, Winner, Movable },
+    components: { MapConfig, Position, Movable },
     network: { playerEntity },
     systemCalls: { move },
   } = useMUD();;

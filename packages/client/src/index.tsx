@@ -6,20 +6,37 @@ import ReactDOM from "react-dom/client";
 import { ToastContainer } from "react-toastify";
 import { App } from "./App";
 import { setup } from "./mud/setup";
-import { MUDProvider } from "./MUDContext";
+import { MUDProvider } from "./contexts/MUDContext";
 import mudConfig from "contracts/mud.config";
+import {
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import {
+  QueryClientProvider,
+  QueryClient,
+} from "@tanstack/react-query";
+import { wagmiConfig } from "./wallet/config";
 
 const rootElement = document.getElementById("react-root");
 if (!rootElement) throw new Error("React root not found");
 const root = ReactDOM.createRoot(rootElement);
 
+const queryClient = new QueryClient();
+
 // TODO: figure out if we actually want this to be async or if we should render something else in the meantime
 setup().then(async (result) => {
   root.render(
-    <MUDProvider value={result}>
-      <App />
-      <ToastContainer position="bottom-right" draggable={false} theme="dark" />
-    </MUDProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          <MUDProvider value={result}>
+            <App />
+            <ToastContainer position="bottom-right" draggable={false} theme="dark" />
+          </MUDProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 
   // https://vitejs.dev/guide/env-and-mode.html
