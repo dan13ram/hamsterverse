@@ -54,7 +54,7 @@ class BatchProcessingQueue<T> {
           } catch (error) {
             console.error('Batch processing error:', error);
             // Optionally re-add failed batch items or implement error handling strategy
-            //this.addItems(batch);
+            // this.addItems(batch);
           }
         }
       }, this.batchInterval);
