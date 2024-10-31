@@ -109,7 +109,7 @@ export async function setupNetwork() {
     const requestDrip = async () => {
       const balance = await publicClient.getBalance({ address });
       console.info(`[Dev Faucet]: Player balance -> ${balance}`);
-      const lowBalance = balance < parseEther("1");
+      const lowBalance = balance < parseEther("0.0001");
       if (lowBalance) {
         console.info("[Dev Faucet]: Balance is low, dripping funds to player");
         // Double drip
