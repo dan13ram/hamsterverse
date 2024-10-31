@@ -153,11 +153,6 @@ export function createSystemCalls(
     await waitForTransaction(tx);
   };
 
-  const fleeEncounter = async () => {
-    const tx = await worldContract.write.flee();
-    await waitForTransaction(tx);
-  };
-
   return {
     move,
     spawn,

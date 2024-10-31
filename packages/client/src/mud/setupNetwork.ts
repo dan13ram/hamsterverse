@@ -14,8 +14,8 @@ import {
   ClientConfig,
   getContract,
 } from "viem";
-import { createFaucetService } from "@latticexyz/services/faucet";
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
+import { createClient as createFaucetClient } from '@latticexyz/faucet';
 
 import { getNetworkConfig } from "./getNetworkConfig";
 import { world } from "./world";
@@ -102,7 +102,9 @@ export async function setupNetwork() {
     const address = burnerAccount.address;
     console.info("[Dev Faucet]: Player address -> ", address);
 
-    const faucet = createFaucetService(networkConfig.faucetServiceUrl);
+    const faucetClient = createFaucetClient({
+      url: 'https://ultimate-dominion-faucet.onrender.com/trpc',
+    });
 
     const requestDrip = async () => {
       const balance = await publicClient.getBalance({ address });
@@ -111,8 +113,9 @@ export async function setupNetwork() {
       if (lowBalance) {
         console.info("[Dev Faucet]: Balance is low, dripping funds to player");
         // Double drip
-        await faucet.dripDev({ address });
-        await faucet.dripDev({ address });
+        await faucetClient.drip.mutate({
+          address,
+        });
       }
     };
 

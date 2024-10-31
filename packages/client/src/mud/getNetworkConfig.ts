@@ -36,6 +36,8 @@ import worlds from "contracts/worlds.json";
  */
 import { supportedChains } from "./supportedChains";
 
+const GARNET_FAUCET_URL = "https://ultimate-dominion-faucet.onrender.com/trpc";
+
 export async function getNetworkConfig() {
   const params = new URLSearchParams(window.location.search);
 
@@ -84,7 +86,7 @@ export async function getNetworkConfig() {
     privateKey: getBurnerPrivateKey(),
     chainId,
     chain,
-    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
+    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl ?? GARNET_FAUCET_URL,
     worldAddress,
     initialBlockNumber,
   };
