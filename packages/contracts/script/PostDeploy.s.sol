@@ -20,6 +20,7 @@ contract PostDeploy is Script {
 
     vm.startBroadcast(deployerPrivateKey);
 
+    /*
     TerrainType O = TerrainType.None;
     TerrainType T = TerrainType.TallGrass;
     TerrainType B = TerrainType.Boulder;
@@ -70,6 +71,7 @@ contract PostDeploy is Script {
     }
 
     MapConfig.set(width, height, terrain);
+    */
 
     vm.stopBroadcast();
   }

@@ -21,11 +21,12 @@ export default defineWorld({
     Encounterable: "bool",
     MapConfig: {
       schema: {
+        id: "bytes32",
         width: "uint32",
         height: "uint32",
         terrain: "bytes",
       },
-      key: [],
+      key: ["id"],
       codegen: {
         dataStruct: false,
       },
@@ -43,6 +44,7 @@ export default defineWorld({
     },
     Monster: "MonsterType",
     Movable: "bool",
+    Winner: "bool",
     Obstruction: "bool",
     OwnedBy: "bytes32",
     Player: "bool",

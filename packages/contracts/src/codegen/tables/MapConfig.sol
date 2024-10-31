@@ -23,8 +23,8 @@ library MapConfig {
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0008020104040000000000000000000000000000000000000000000000000000);
 
-  // Hex-encoded key schema of ()
-  Schema constant _keySchema = Schema.wrap(0x0000000000000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded key schema of (bytes32)
+  Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
   // Hex-encoded value schema of (uint32, uint32, bytes)
   Schema constant _valueSchema = Schema.wrap(0x000802010303c400000000000000000000000000000000000000000000000000);
 
@@ -33,7 +33,8 @@ library MapConfig {
    * @return keyNames An array of strings with the names of key fields.
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
-    keyNames = new string[](0);
+    keyNames = new string[](1);
+    keyNames[0] = "id";
   }
 
   /**
@@ -64,8 +65,9 @@ library MapConfig {
   /**
    * @notice Get width.
    */
-  function getWidth() internal view returns (uint32 width) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function getWidth(bytes32 id) internal view returns (uint32 width) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -74,8 +76,9 @@ library MapConfig {
   /**
    * @notice Get width.
    */
-  function _getWidth() internal view returns (uint32 width) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _getWidth(bytes32 id) internal view returns (uint32 width) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -84,8 +87,9 @@ library MapConfig {
   /**
    * @notice Set width.
    */
-  function setWidth(uint32 width) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function setWidth(bytes32 id, uint32 width) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((width)), _fieldLayout);
   }
@@ -93,8 +97,9 @@ library MapConfig {
   /**
    * @notice Set width.
    */
-  function _setWidth(uint32 width) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _setWidth(bytes32 id, uint32 width) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((width)), _fieldLayout);
   }
@@ -102,8 +107,9 @@ library MapConfig {
   /**
    * @notice Get height.
    */
-  function getHeight() internal view returns (uint32 height) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function getHeight(bytes32 id) internal view returns (uint32 height) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -112,8 +118,9 @@ library MapConfig {
   /**
    * @notice Get height.
    */
-  function _getHeight() internal view returns (uint32 height) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _getHeight(bytes32 id) internal view returns (uint32 height) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 1, _fieldLayout);
     return (uint32(bytes4(_blob)));
@@ -122,8 +129,9 @@ library MapConfig {
   /**
    * @notice Set height.
    */
-  function setHeight(uint32 height) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function setHeight(bytes32 id, uint32 height) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((height)), _fieldLayout);
   }
@@ -131,8 +139,9 @@ library MapConfig {
   /**
    * @notice Set height.
    */
-  function _setHeight(uint32 height) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _setHeight(bytes32 id, uint32 height) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((height)), _fieldLayout);
   }
@@ -140,8 +149,9 @@ library MapConfig {
   /**
    * @notice Get terrain.
    */
-  function getTerrain() internal view returns (bytes memory terrain) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function getTerrain(bytes32 id) internal view returns (bytes memory terrain) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes memory _blob = StoreSwitch.getDynamicField(_tableId, _keyTuple, 0);
     return (bytes(_blob));
@@ -150,8 +160,9 @@ library MapConfig {
   /**
    * @notice Get terrain.
    */
-  function _getTerrain() internal view returns (bytes memory terrain) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _getTerrain(bytes32 id) internal view returns (bytes memory terrain) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes memory _blob = StoreCore.getDynamicField(_tableId, _keyTuple, 0);
     return (bytes(_blob));
@@ -160,8 +171,9 @@ library MapConfig {
   /**
    * @notice Set terrain.
    */
-  function setTerrain(bytes memory terrain) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function setTerrain(bytes32 id, bytes memory terrain) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.setDynamicField(_tableId, _keyTuple, 0, bytes((terrain)));
   }
@@ -169,8 +181,9 @@ library MapConfig {
   /**
    * @notice Set terrain.
    */
-  function _setTerrain(bytes memory terrain) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _setTerrain(bytes32 id, bytes memory terrain) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.setDynamicField(_tableId, _keyTuple, 0, bytes((terrain)));
   }
@@ -178,8 +191,9 @@ library MapConfig {
   /**
    * @notice Get the length of terrain.
    */
-  function lengthTerrain() internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function lengthTerrain(bytes32 id) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     uint256 _byteLength = StoreSwitch.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
@@ -190,8 +204,9 @@ library MapConfig {
   /**
    * @notice Get the length of terrain.
    */
-  function _lengthTerrain() internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _lengthTerrain(bytes32 id) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     uint256 _byteLength = StoreCore.getDynamicFieldLength(_tableId, _keyTuple, 0);
     unchecked {
@@ -203,8 +218,9 @@ library MapConfig {
    * @notice Get an item of terrain.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function getItemTerrain(uint256 _index) internal view returns (bytes memory) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function getItemTerrain(bytes32 id, uint256 _index) internal view returns (bytes memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     unchecked {
       bytes memory _blob = StoreSwitch.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
@@ -216,8 +232,9 @@ library MapConfig {
    * @notice Get an item of terrain.
    * @dev Reverts with Store_IndexOutOfBounds if `_index` is out of bounds for the array.
    */
-  function _getItemTerrain(uint256 _index) internal view returns (bytes memory) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _getItemTerrain(bytes32 id, uint256 _index) internal view returns (bytes memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     unchecked {
       bytes memory _blob = StoreCore.getDynamicFieldSlice(_tableId, _keyTuple, 0, _index * 1, (_index + 1) * 1);
@@ -228,8 +245,9 @@ library MapConfig {
   /**
    * @notice Push a slice to terrain.
    */
-  function pushTerrain(bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function pushTerrain(bytes32 id, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
   }
@@ -237,8 +255,9 @@ library MapConfig {
   /**
    * @notice Push a slice to terrain.
    */
-  function _pushTerrain(bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _pushTerrain(bytes32 id, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.pushToDynamicField(_tableId, _keyTuple, 0, bytes((_slice)));
   }
@@ -246,8 +265,9 @@ library MapConfig {
   /**
    * @notice Pop a slice from terrain.
    */
-  function popTerrain() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function popTerrain(bytes32 id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.popFromDynamicField(_tableId, _keyTuple, 0, 1);
   }
@@ -255,8 +275,9 @@ library MapConfig {
   /**
    * @notice Pop a slice from terrain.
    */
-  function _popTerrain() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _popTerrain(bytes32 id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.popFromDynamicField(_tableId, _keyTuple, 0, 1);
   }
@@ -264,8 +285,9 @@ library MapConfig {
   /**
    * @notice Update a slice of terrain at `_index`.
    */
-  function updateTerrain(uint256 _index, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function updateTerrain(bytes32 id, uint256 _index, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
@@ -276,8 +298,9 @@ library MapConfig {
   /**
    * @notice Update a slice of terrain at `_index`.
    */
-  function _updateTerrain(uint256 _index, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _updateTerrain(bytes32 id, uint256 _index, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     unchecked {
       bytes memory _encoded = bytes((_slice));
@@ -288,8 +311,9 @@ library MapConfig {
   /**
    * @notice Get the full data.
    */
-  function get() internal view returns (uint32 width, uint32 height, bytes memory terrain) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function get(bytes32 id) internal view returns (uint32 width, uint32 height, bytes memory terrain) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreSwitch.getRecord(
       _tableId,
@@ -302,8 +326,9 @@ library MapConfig {
   /**
    * @notice Get the full data.
    */
-  function _get() internal view returns (uint32 width, uint32 height, bytes memory terrain) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _get(bytes32 id) internal view returns (uint32 width, uint32 height, bytes memory terrain) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     (bytes memory _staticData, EncodedLengths _encodedLengths, bytes memory _dynamicData) = StoreCore.getRecord(
       _tableId,
@@ -316,13 +341,14 @@ library MapConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(uint32 width, uint32 height, bytes memory terrain) internal {
+  function set(bytes32 id, uint32 width, uint32 height, bytes memory terrain) internal {
     bytes memory _staticData = encodeStatic(width, height);
 
     EncodedLengths _encodedLengths = encodeLengths(terrain);
     bytes memory _dynamicData = encodeDynamic(terrain);
 
-    bytes32[] memory _keyTuple = new bytes32[](0);
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData);
   }
@@ -330,13 +356,14 @@ library MapConfig {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(uint32 width, uint32 height, bytes memory terrain) internal {
+  function _set(bytes32 id, uint32 width, uint32 height, bytes memory terrain) internal {
     bytes memory _staticData = encodeStatic(width, height);
 
     EncodedLengths _encodedLengths = encodeLengths(terrain);
     bytes memory _dynamicData = encodeDynamic(terrain);
 
-    bytes32[] memory _keyTuple = new bytes32[](0);
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.setRecord(_tableId, _keyTuple, _staticData, _encodedLengths, _dynamicData, _fieldLayout);
   }
@@ -384,8 +411,9 @@ library MapConfig {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function deleteRecord(bytes32 id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -393,8 +421,9 @@ library MapConfig {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function _deleteRecord(bytes32 id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -448,8 +477,9 @@ library MapConfig {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple() internal pure returns (bytes32[] memory) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
+  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     return _keyTuple;
   }

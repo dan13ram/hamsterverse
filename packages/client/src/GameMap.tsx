@@ -2,6 +2,8 @@ import { ReactNode, useEffect, useState } from "react";
 import { Entity } from "@latticexyz/recs";
 import { twMerge } from "tailwind-merge";
 import { useMUD } from "./MUDContext";
+import hamsterPNG from "./assets/hamster.png";
+
 
 type Props = {
   width: number;
@@ -36,16 +38,16 @@ export const GameMap = ({
   const rows = new Array(width).fill(0).map((_, i) => i);
   const columns = new Array(height).fill(0).map((_, i) => i);
 
-  const [showEncounter, setShowEncounter] = useState(false);
+  //const [showEncounter, setShowEncounter] = useState(false);
   // Reset show encounter when we leave encounter
-  useEffect(() => {
-    if (!encounter) {
-      setShowEncounter(false);
-    }
-  }, [encounter]);
+  //useEffect(() => {
+  //  if (!encounter) {
+  //    setShowEncounter(false);
+  //  }
+  //}, [encounter]);
 
   return (
-    <div className="inline-grid p-2 bg-lime-500 relative overflow-hidden">
+    <div className="inline-grid p-2 relative">
       {rows.map((y) =>
         columns.map((x) => {
           const terrainEmoji = terrain?.find(
@@ -61,7 +63,7 @@ export const GameMap = ({
             <div
               key={`${x},${y}`}
               className={twMerge(
-                "w-8 h-8 flex items-center justify-center",
+                "w-10 h-10 flex items-center justify-center bg-green-900",
                 onTileClick ? "cursor-pointer hover:ring" : null
               )}
               style={{
@@ -78,9 +80,9 @@ export const GameMap = ({
                   style={{
                     boxShadow: "0 0 0 100vmax black",
                   }}
-                  onAnimationEnd={() => {
-                    setShowEncounter(true);
-                  }}
+                //onAnimationEnd={() => {
+                //  setShowEncounter(true);
+                //}}
                 ></div>
               ) : null}
               <div className="flex flex-wrap gap-1 items-center justify-center relative">
@@ -90,17 +92,42 @@ export const GameMap = ({
                   </div>
                 ) : null}
                 <div className="relative">
-                  {playersHere?.map((p) => (
-                    <span key={p.entity}>{p.emoji}</span>
-                  ))}
+                  {mainPlayerHere && (
+                    <div key={mainPlayerHere.entity} className="relative">
+                      <img src={hamsterPNG} className="relative w-10 mb-10 z-10" alt="hamster" />
+                      <div className="absolute pointer-events-none rounded-full bg-blackAlpha w-9 h-4 left-0 -bottom-1 z-0" />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           );
         })
       )}
+      {Array.from({ length: width }).map((_, i) => (
+        <div
+          key={i}
+          className={twMerge(
+            "w-10 h-10 flex items-center justify-center",
+            i == width - 2 ? "bg-green-900" : null,
+            onTileClick ? "cursor-pointer hover:ring" : null
+          )}
+          style={{
+            gridColumn: i + 1,
+            gridRow: height + 1,
+          }}
+        >
+          {i == width - 2 && (
+            <div
+            >
+              🏁
+            </div>
+          )}
+        </div>
+      ))
+      }
 
-      {encounter && showEncounter ? (
+      {/*encounter && showEncounter ? (
         <div
           className="relative z-10 -m-2 bg-black text-white flex items-center justify-center"
           style={{
@@ -112,7 +139,7 @@ export const GameMap = ({
         >
           {encounter}
         </div>
-      ) : null}
-    </div>
+      ) : null*/}
+    </div >
   );
 };

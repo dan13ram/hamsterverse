@@ -10,6 +10,7 @@ import { MapConfig } from "./tables/MapConfig.sol";
 import { MonsterCatchAttempt } from "./tables/MonsterCatchAttempt.sol";
 import { Monster } from "./tables/Monster.sol";
 import { Movable } from "./tables/Movable.sol";
+import { Winner } from "./tables/Winner.sol";
 import { Obstruction } from "./tables/Obstruction.sol";
 import { OwnedBy } from "./tables/OwnedBy.sol";
 import { Player } from "./tables/Player.sol";

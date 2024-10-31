@@ -5,6 +5,8 @@ import { ClientComponents } from "./createClientComponents";
 import { SetupNetworkResult } from "./setupNetwork";
 import { Direction } from "../direction";
 import { MonsterCatchResult } from "../monsterCatchResult";
+import { Hex } from "viem";
+import { hexToArray } from "@latticexyz/utils";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -15,12 +17,13 @@ export function createSystemCalls(
     MapConfig,
     MonsterCatchAttempt,
     Obstruction,
+    Winner,
     Player,
     Position,
   }: ClientComponents
 ) {
   const wrapPosition = (x: number, y: number) => {
-    const mapConfig = getComponentValue(MapConfig, singletonEntity);
+    const mapConfig = getComponentValue(MapConfig, playerEntity);
     if (!mapConfig) {
       throw new Error("mapConfig no yet loaded or initialized");
     }
@@ -30,8 +33,19 @@ export function createSystemCalls(
     ];
   };
 
-  const isObstructed = (x: number, y: number) => {
-    return runQuery([Has(Obstruction), HasValue(Position, { x, y })]).size > 0;
+  const isObstructed = (x: number, y: number): boolean => {
+    const mapConfig = getComponentValue(MapConfig, playerEntity);
+    if (!mapConfig) {
+      return false;
+    }
+    const { width, height, terrain: terrainData } = mapConfig;
+
+    return Array.from(hexToArray(terrainData)).some((value, index) => {
+      const thisX = index % width;
+      const thisY = Math.floor(index / width);
+      const isObstruction = value > 0;
+      return thisX === x && thisY === y && isObstruction;
+    });
   };
 
   const move = async (direction: Direction) => {
@@ -39,19 +53,28 @@ export function createSystemCalls(
       throw new Error("no player");
     }
 
+    const { width, height } = getComponentValue(MapConfig, playerEntity) ?? {};
+
     const position = getComponentValue(Position, playerEntity);
-    if (!position) {
+    if (!position || !width || !height) {
       console.warn("cannot move without a player position, not yet spawned?");
       return;
     }
 
-    const inEncounter = !!getComponentValue(Encounter, playerEntity);
-    if (inEncounter) {
-      console.warn("cannot move while in encounter");
-      return;
-    }
+    //const inEncounter = !!getComponentValue(Encounter, playerEntity);
+    //if (inEncounter) {
+    //  console.warn("cannot move while in encounter");
+    //  return;
+    //}
 
     let { x: inputX, y: inputY } = position;
+
+    let isWinner = false;
+    if (inputY === height - 1 && inputX === width - 2 && direction === Direction.South) {
+      isWinner = true;
+    }
+
+
     if (direction === Direction.North) {
       inputY -= 1;
     } else if (direction === Direction.East) {
@@ -63,22 +86,34 @@ export function createSystemCalls(
     }
 
     const [x, y] = wrapPosition(inputX, inputY);
-    if (isObstructed(x, y)) {
+
+    if (!isWinner && isObstructed(x, y)) {
       console.warn("cannot move to obstructed space");
       return;
     }
 
-    const positionId = uuid();
-    Position.addOverride(positionId, {
-      entity: playerEntity,
-      value: { x, y },
-    });
+    const overrideId = uuid();
+    if (!isWinner) {
+      Position.addOverride(overrideId, {
+        entity: playerEntity,
+        value: { x, y },
+      });
+    } else {
+      Winner.addOverride(overrideId, {
+        entity: playerEntity,
+        value: { value: true },
+      });
+    }
 
     try {
       const tx = await worldContract.write.move([direction]);
       await waitForTransaction(tx);
     } finally {
-      Position.removeOverride(positionId);
+      if (!isWinner) {
+        Position.removeOverride(overrideId);
+      } else {
+        Winner.removeOverride(overrideId);
+      }
     }
   };
 
@@ -140,6 +175,17 @@ export function createSystemCalls(
     return catchAttempt.result as MonsterCatchResult;
   };
 
+  const newMap = async () => {
+    const tx = await worldContract.write.newMap([20, 20]);
+    await waitForTransaction(tx);
+    return tx;
+  };
+
+  const setMap = async (width: number, height: number, terrain: Hex) => {
+    const tx = await worldContract.write.setMap([width, height, terrain]);
+    await waitForTransaction(tx);
+  };
+
   const fleeEncounter = async () => {
     const tx = await worldContract.write.flee();
     await waitForTransaction(tx);
@@ -150,5 +196,7 @@ export function createSystemCalls(
     spawn,
     throwBall,
     fleeEncounter,
+    newMap,
+    setMap,
   };
 }
