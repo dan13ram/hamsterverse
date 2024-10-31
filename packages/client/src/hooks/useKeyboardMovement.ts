@@ -24,7 +24,7 @@ export const useKeyboardMovement = () => {
 
   const movable = useComponentValue(Movable, playerEntity);
 
-  const move = useCallback(debounce(moveSystemCall, 500), [moveSystemCall]);
+  const move = useCallback(debounce(moveSystemCall, 100), [moveSystemCall]);
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
