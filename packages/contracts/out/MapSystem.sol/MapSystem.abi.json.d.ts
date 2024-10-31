@@ -177,4 +177,6 @@ declare const abi: [
       }
     ]
   }
-]; export default abi;
+];
+
+export default abi;

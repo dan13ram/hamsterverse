@@ -14,6 +14,7 @@ export function createSystemCalls(
     MapConfig,
     Winner,
     Player,
+    Movable,
     Position,
   }: ClientComponents
 ) {
@@ -112,42 +113,6 @@ export function createSystemCalls(
     }
   };
 
-  const spawn = async (inputX: number, inputY: number) => {
-    if (!playerEntity) {
-      throw new Error("no player");
-    }
-
-    const canSpawn = getComponentValue(Player, playerEntity)?.value !== true;
-    if (!canSpawn) {
-      throw new Error("already spawned");
-    }
-
-    const [x, y] = wrapPosition(inputX, inputY);
-    if (isObstructed(x, y)) {
-      console.warn("cannot spawn on obstructed space");
-      return;
-    }
-
-    const positionId = uuid();
-    Position.addOverride(positionId, {
-      entity: playerEntity,
-      value: { x, y },
-    });
-    const playerId = uuid();
-    Player.addOverride(playerId, {
-      entity: playerEntity,
-      value: { value: true },
-    });
-
-    try {
-      const tx = await worldContract.write.spawn([x, y]);
-      await waitForTransaction(tx);
-    } finally {
-      Position.removeOverride(positionId);
-      Player.removeOverride(playerId);
-    }
-  };
-
   const setMap = async (width: number, height: number, terrain: Hex) => {
     const tx = await worldContract.write.setMap([width, height, terrain]);
     await waitForTransaction(tx);
@@ -155,7 +120,6 @@ export function createSystemCalls(
 
   return {
     move,
-    spawn,
     setMap,
   };
 }

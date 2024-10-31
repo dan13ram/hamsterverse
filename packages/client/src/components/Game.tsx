@@ -9,12 +9,14 @@ import { useState } from "react";
 
 export const Game = () => {
   const {
-    components: { MapConfig },
+    components: { MapConfig, Movable },
     systemCalls: { setMap },
     network: { playerEntity },
   } = useMUD();
 
   const mapConfig = useComponentValue(MapConfig, playerEntity);
+
+  const movable = useComponentValue(Movable, playerEntity);
 
   const [size, setSize] = useState(19);
 
@@ -58,12 +60,14 @@ export const Game = () => {
         onChange={(e) => setSize(parseInt(e.target.value))}
         className="p-2 bg-black rounded-md"
       /> */}
-      <button
-        onClick={() => newMapGenerateLocal(size)}
-        className="p-2 bg-blue-500 rounded-md"
-      >
-        {mapConfig ? "Restart" : "Start"}
-      </button>
+      {!movable?.value && (
+        <button
+          onClick={() => newMapGenerateLocal(size)}
+          className="p-2 bg-blue-500 rounded-md"
+        >
+          {mapConfig ? "Restart" : "Start"}
+        </button>
+      )}
       {mapConfig && <GameBoard />}
     </div>
   );
