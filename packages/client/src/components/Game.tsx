@@ -16,8 +16,6 @@ export const Game = () => {
 
   const mapConfig = useComponentValue(MapConfig, playerEntity);
 
-  const movable = useComponentValue(Movable, playerEntity);
-
   const [size, setSize] = useState(19);
 
   const newMapGenerateLocal = (_size: number) => {
@@ -29,6 +27,11 @@ export const Game = () => {
 
     const maze = new MazeGenerator(newSize);
     maze.generate();
+
+    while (!maze.isSolvable()) {
+      maze.generate();
+    }
+
     setMap(maze.size, maze.size, maze.bytes());
   };
 
@@ -52,22 +55,20 @@ export const Game = () => {
           showBalance={false}
         /> 
       </div>*/}
-      {/* <input
+      <input
         type="number"
         value={size}
         min={1}
         max={25}
         onChange={(e) => setSize(parseInt(e.target.value))}
         className="p-2 bg-black rounded-md"
-      /> */}
-      {!movable?.value && (
-        <button
-          onClick={() => newMapGenerateLocal(size)}
-          className="p-2 bg-blue-500 rounded-md"
-        >
-          {mapConfig ? "Restart" : "Start"}
-        </button>
-      )}
+      />
+      <button
+        onClick={() => newMapGenerateLocal(size)}
+        className="p-2 bg-blue-500 rounded-md"
+      >
+        {mapConfig ? "Restart" : "Start"}
+      </button>
       {mapConfig && <GameBoard />}
     </div>
   );

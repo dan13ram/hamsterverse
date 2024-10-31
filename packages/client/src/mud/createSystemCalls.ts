@@ -16,8 +16,8 @@ type MoveBatchItem = {
   direction: Direction;
 }
 
-let isPositionOverridden = false;
 const positionOverrideID = uuid();
+const moveOverrideID = uuid();
 
 export function createSystemCalls(
   { playerEntity, worldContract, waitForTransaction }: SetupNetworkResult,
@@ -127,32 +127,32 @@ export function createSystemCalls(
       return;
     }
 
-
-    try {
-      if (isWinner) {
-        //Winner.addOverride(overrideId, {
-        //  entity: playerEntity,
-        //  value: { value: true },
-        //});
-      } else {
-        Position.removeOverride(positionOverrideID);
-        Position.addOverride(positionOverrideID, {
-          entity: playerEntity,
-          value: { x, y },
-        });
-      }
-      moveBatchQueue.addItem({ direction });
-      //const tx = await worldContract.write.move([direction]);
-      //await waitForTransaction(tx);
-      console.log("Added to batch queue: ", direction);
-    } finally {
+    if (isWinner) {
+      Movable.addOverride(moveOverrideID, {
+        entity: playerEntity,
+        value: { value: false },
+      });
+    } else {
+      Position.addOverride(positionOverrideID, {
+        entity: playerEntity,
+        value: { x, y },
+      });
     }
+
+    moveBatchQueue.addItem({ direction });
   };
 
   const setMap = async (width: number, height: number, terrain: Hex) => {
+    const mapConfigOverrideID = uuid();
+    MapConfig.addOverride(mapConfigOverrideID, {
+      entity: playerEntity,
+      value: { width, height, terrain },
+    });
     const tx = await worldContract.write.setMap([width, height, terrain]);
     await waitForTransaction(tx);
     Position.removeOverride(positionOverrideID);
+    MapConfig.removeOverride(mapConfigOverrideID);
+    Movable.removeOverride(moveOverrideID);
   };
 
   return {

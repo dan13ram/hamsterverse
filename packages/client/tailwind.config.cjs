@@ -7,8 +7,8 @@ module.exports = {
         blackAlpha: "rgba(0, 0, 0, 0.5)",
       },
       animation: {
-        battle: "battle 2s linear 1",
-        win: "win 2s linear 1",
+        battle: "battle 4s linear 1",
+        win: "win 1s linear infinite",
       },
       keyframes: {
         win: {

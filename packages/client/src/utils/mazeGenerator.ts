@@ -7,12 +7,15 @@ export class MazeGenerator {
   constructor(size: number) {
     // Ensure size is odd to have proper walls
     this.size = size % 2 === 0 ? size + 1 : size;
+
+    // Start with all walls
     this.maze = Array(this.size).fill(1).map(() => Array(this.size).fill(1));
   }
 
   generate() {
+    const randomTerrain = Math.floor(Math.random() * 2) + 1;
     // Start with all walls
-    this.maze = Array(this.size).fill(1).map(() => Array(this.size).fill(1));
+    this.maze = Array(this.size).fill(1).map(() => Array(this.size).fill(randomTerrain));
 
     // Carve from the entrance
     this.carve(1, 1);
