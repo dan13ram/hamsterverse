@@ -14,8 +14,6 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 type MoveBatchItem = {
   direction: Direction;
-  overrideId?: string;
-  isWinner?: boolean;
 }
 
 let isPositionOverridden = false;
@@ -33,7 +31,7 @@ export function createSystemCalls(
 ) {
 
 
-  const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(2000, async (batch: Direction[]) => {
+  const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(2000, async (batch: MoveBatchItem[]) => {
 
     const resourceId = resourceToHex({
       type: "system",
@@ -129,7 +127,6 @@ export function createSystemCalls(
       return;
     }
 
-    const overrideId = uuid();
 
     try {
       if (isWinner) {
@@ -144,7 +141,7 @@ export function createSystemCalls(
           value: { x, y },
         });
       }
-      moveBatchQueue.addItem({ direction, overrideId, isWinner });
+      moveBatchQueue.addItem({ direction });
       //const tx = await worldContract.write.move([direction]);
       //await waitForTransaction(tx);
       console.log("Added to batch queue: ", direction);
