@@ -33,7 +33,7 @@ export function createSystemCalls(
 ) {
 
 
-  const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(1000, async (batch: Direction[]) => {
+  const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(2000, async (batch: Direction[]) => {
 
     const resourceId = resourceToHex({
       type: "system",
@@ -57,7 +57,7 @@ export function createSystemCalls(
     } finally {
     }
 
-  });
+  }, 20);
 
   const wrapPosition = (x: number, y: number) => {
     const mapConfig = getComponentValue(MapConfig, playerEntity);
