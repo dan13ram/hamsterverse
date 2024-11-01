@@ -33,7 +33,7 @@ export const Game = () => {
   }, [setMap]);
 
   return (
-    <div className="relative flex flex-col items-center gap-4">
+    <div className="relative flex flex-col items-center gap-4 w-full h-full">
       <div className="relative flex flex-row items-center gap-4">
         {import.meta.env.DEV && (
           <input
@@ -48,7 +48,7 @@ export const Game = () => {
         {(!mapConfig || import.meta.env.DEV) && (
           <button
             onClick={() => newMapGenerateLocal(size)}
-            className="p-2 bg-blue-500 rounded-md"
+            className="py-2 px-8 bg-blue-500 rounded-md hover:bg-blue-100 hover:text-blue-900 border-white border-2"
           >
             {mapConfig ? "Restart" : "Start"}
           </button>

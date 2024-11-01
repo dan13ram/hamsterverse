@@ -48,7 +48,7 @@ export const GameBoard = () => {
   if (winner?.value === true) {
     return (
       <div className="flex flex-col items-center">
-        <h1 className="text-2xl">You Win!</h1>
+        <h1 className="text-2xl">You Escaped the Labyrinth!</h1>
       </div>
     );
   }

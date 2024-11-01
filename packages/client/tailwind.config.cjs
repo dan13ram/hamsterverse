@@ -9,8 +9,32 @@ module.exports = {
       animation: {
         battle: "battle 4s linear 1",
         win: "win 1s linear infinite",
+        scroll: "scroll-bg-left 30s ease-in-out infinite",
+        "scroll-right": "scroll-bg-right 30s ease-in-out infinite",
       },
       keyframes: {
+        'scroll-bg-left': {
+          '0': {
+            'background-position': '0 0',
+          },
+          '50%': {
+            'background-position': '-200vw 0',
+          },
+          '100%': {
+            'background-position': '0 0',
+          },
+        },
+        "scroll-bg-right": {
+          '0': {
+            'background-position': '0 0',
+          },
+          '50%': {
+            'background-position': '200vw 0',
+          },
+          '100%': {
+            'background-position': '0 0',
+          },
+        },
         win: {
           "100%": {
             width: "200%",

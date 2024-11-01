@@ -6,17 +6,14 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { HomePage } from "./views/HomePage";
-import { GamePage } from "./views/GamePage";
+import { Root } from "./views/Root";
+import { ErrorPage } from "./views/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/game",
-    element: <GamePage />,
+    element: <Root />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
