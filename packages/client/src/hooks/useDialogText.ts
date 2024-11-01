@@ -6,30 +6,16 @@ import { useAccount } from "wagmi";
 import { useKeyboard } from "./useKeyboard";
 
 const dialogues = [
-  {
-    scene: 1,
-    lines: [
-      "Welcome to the Golden Burrow, where everything seems warm and inviting. But not all is as it appears...",
-      "Meet Scruff, a hamster who feels something is deeply wrong here. There's a creeping dread beneath this comfort.",
-      "Scruff’s eyes catch glimpses of darkness, images of decay hidden within the glowing walls."
-    ]
-  },
-  {
-    scene: 2,
-    lines: [
-      "Scruff's mind fills with visions: a world outside, choked with smoke, bones, and shadows of despair.",
-      "Suddenly, he sees a colossal figure – the Moloch Tower – towering over a desolate landscape.",
-      "Scruff’s trance breaks. He knows he must escape the gilded cage of this burrow and face the truth."
-    ]
-  },
-  {
-    scene: 3,
-    lines: [
-      "Driven by his visions, Scruff escapes through hidden tunnels, breathing fresh air for the first time as he surfaces.",
-      "The world above is a wasteland, but in its raw honesty, Scruff feels a sense of liberation.",
-      "His journey has just begun. Ahead lies a path filled with danger, but also, a glimmer of hope."
-    ]
-  },
+  "Welcome to the Golden Burrow, where everything seems warm and inviting. But not all is as it appears.",
+  "Until, one little hamster figures it out.",
+  "Meet Scruff. He can feel that there is something deeply wrong here - a creeping sense of dread beneath the layers of convenience and comfort.",
+  "Scruff’s eyes catch glimpses of darkness, of decay, a landscape choked with smoke, bones, and shadows of despair. Hidden away beyond the glowing walls of the burrows, lied the truth.",
+  "He sees a colossal figure – the Moloch Tower – towering over a desolate landscape.",
+  "Face Moloch.",
+  "His journey has just begun. Ahead lies a path filled with danger, but also, a glimmer of hope. ",
+]
+
+/*
   {
     scene: 4,
     lines: [
@@ -111,6 +97,7 @@ const dialogues = [
     ]
   }
 ];
+*/
 
 export const useDialogText = (isComplete: boolean): string => {
   const { accept, reset } = useKeyboard();
@@ -119,30 +106,25 @@ export const useDialogText = (isComplete: boolean): string => {
   const {
     components: { Page },
     network: { playerEntity },
+    systemCalls: { nextPage },
   } = useMUD();;
 
   const page = Number(useComponentValue(Page, playerEntity)?.value ?? 0);
 
-  const lines = dialogues[page].lines;
-
-  const [line, setLine] = useState(0);
+  const line = dialogues[page];
 
   useEffect(() => {
     if (accept) {
       if (isComplete) {
-        setLine(line + 1 % lines.length);
+        nextPage();
       }
       reset();
     }
   }, [accept, reset, isComplete]);
 
-  useEffect(() => {
-    setLine(0);
-  }, [page]);
-
   if (!isConnected) {
     return "Welcome, Anon, to the Hamsterverse! Are you ready to go on a journey to uncover the secrets hidden within the Golden Burrow?";
   }
 
-  return lines[line];
+  return line ?? "Coming soon...";
 };

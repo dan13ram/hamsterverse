@@ -16,8 +16,13 @@ module.exports = {
         win: "win 1s linear infinite",
         scroll: "appear 2s linear, scroll-bg-left 30s 1s ease-in-out infinite",
         "scroll-right": "appear 2s linear, scroll-bg-right 30s 1s ease-in-out infinite",
+        "pan-right": "pan-right 1s 1s linear forwards",
       },
       keyframes: {
+        'pan-right': {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-25.5%)' },
+        },
         appear: {
           '0%': { opacity: 0 },
           '100%': { opacity: 1 }

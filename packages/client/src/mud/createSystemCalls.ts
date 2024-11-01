@@ -157,9 +157,12 @@ export function createSystemCalls(
 
   const nextPage = async () => {
     const page = Number(getComponentValue(Page, playerEntity)?.value ?? 0);
+    if (page === 6) {
+      return;
+    }
     Page.addOverride(pageOverrideID, {
       entity: playerEntity,
-      value: { value: (page + 1) % 10 },
+      value: { value: (page + 1) % 7 },
     });
 
     const tx = await worldContract.write.nextPage();
@@ -170,15 +173,20 @@ export function createSystemCalls(
 
   const prevPage = async () => {
     const page = Number(getComponentValue(Page, playerEntity)?.value ?? 0);
+    if (page === 0) {
+      return;
+    }
     Page.addOverride(pageOverrideID, {
       entity: playerEntity,
-      value: { value: (page + 9) % 10 },
+      value: { value: (page + 6) % 7 },
     });
 
     const tx = await worldContract.write.prevPage();
     await waitForTransaction(tx);
 
     Page.removeOverride(pageOverrideID);
+    Position.removeOverride(positionOverrideID);
+    Movable.removeOverride(moveOverrideID);
   };
 
 

@@ -1,19 +1,31 @@
 import { useComponentValue } from "@latticexyz/react";
 import { useMUD } from "../contexts/MUDContext";
-import { useKeyboardMovement } from "../hooks/useKeyboardMovement";
 import { hexToArray } from "@latticexyz/utils";
 import { TerrainType, terrainTypes } from "../utils/terrainTypes";
 import { twMerge } from "tailwind-merge";
+import { MazeGenerator } from "../utils/mazeGenerator";
+
+import { toast } from "react-toastify";
 
 import hamsterEmoji from "../assets/hamster.png";
 import startEmoji from "../assets/start.png";
 import finishEmoji from "../assets/finish.png"
 
+import scruff from "../assets/scruff.png";
+import finishLine from "../assets/finish_line.png";
+import move from "../assets/move.png";
 
-export const GameBoard = () => {
+
+import { useCallback } from "react";
+
+import { Image } from "./Image";
+import { TextBox } from "./TextBox";
+
+export const Maze = () => {
   const {
     components: { MapConfig, Position, Winner, Movable },
     network: { playerEntity },
+    systemCalls: { restartGame },
   } = useMUD();
 
   const mapConfig = useComponentValue(MapConfig, playerEntity);
@@ -43,14 +55,54 @@ export const GameBoard = () => {
   const movable = useComponentValue(Movable, playerEntity);
   const winner = useComponentValue(Winner, playerEntity);
 
+  const restart = useCallback(() => {
+    const maze = new MazeGenerator(14);
+    maze.generate();
+
+    while (!maze.isSolvable()) {
+      maze.generate();
+    }
+
+    restartGame(maze.size, maze.size, maze.bytes());
+  }, [restartGame]);
+
   if (winner?.value === true) {
     return (
-      <h1 className="text-2xl">You Escaped the Labyrinth!</h1>
+      <div className="flex flex-col items-center gap-8 w-full">
+        <h1 className="text-2xl">You Escaped the Labyrinth! Level 1 Complete.</h1>
+        <button
+          className="border-2 border-white rounded-md hover:bg-[#202020]"
+          onClick={restart}
+        >
+          <TextBox text="Restart Game" />
+        </button>
+      </div>
     );
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-center gap-4 bg-green-500 py-6 px-8 rounded-lg">
+    <div className="relative flex flex-col items-center justify-center gap-4 w-full" >
+      <div className="absolute left-0 top-[17%] w-[27%] p-8 flex flex-col items-center justify-center">
+        <Image
+          src={scruff}
+        />
+        <button
+          className="border-2 border-white rounded-md hover:bg-[#202020]"
+          onClick={() => toast("Coming Soon!")}
+        >
+          <TextBox text="Collect Scruff" />
+        </button>
+      </div>
+      <div className="absolute right-12 top-0 w-[20%] p-8 flex flex-col items-center justify-center">
+        <Image
+          src={move}
+        />
+      </div>
+      <div className="absolute right-0 -bottom-[13%] w-[27%] p-8 flex flex-col items-center justify-center">
+        <Image
+          src={finishLine}
+        />
+      </div>
       <div className="inline-grid p-2 relative">
         {Array.from({ length: width }).map((_, i) => (
           <div

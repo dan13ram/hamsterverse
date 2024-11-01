@@ -2,10 +2,10 @@
   "systems": [
     {
       "namespaceLabel": "",
-      "label": "ComicSystem",
+      "label": "GameSystem",
       "namespace": "",
-      "name": "ComicSystem",
-      "systemId": "0x73790000000000000000000000000000436f6d696353797374656d0000000000",
+      "name": "GameSystem",
+      "systemId": "0x7379000000000000000000000000000047616d6553797374656d000000000000",
       "abi": [
         "function nextPage()",
         "function prevPage()"
@@ -42,5 +42,5 @@
       ]
     }
   ],
-  "createdAt": 1730445840669
+  "createdAt": 1730472891659
 }

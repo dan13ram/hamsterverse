@@ -35,7 +35,7 @@ setup().then(async (result) => {
         <RainbowKitProvider theme={rainbowTheme}>
           <MUDProvider value={result}>
             <App />
-            <ToastContainer position="bottom-right" draggable={false} theme="dark" />
+            <ToastContainer position="top-right" draggable={false} theme="dark" />
           </MUDProvider>
         </RainbowKitProvider>
       </QueryClientProvider>

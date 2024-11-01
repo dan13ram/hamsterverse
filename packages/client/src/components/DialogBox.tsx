@@ -1,13 +1,23 @@
+import { useComponentValue } from "@latticexyz/react";
+import { useMUD } from "../contexts/MUDContext";
 import { useState, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useDialogText } from '../hooks/useDialogText';
+import { ready } from '../utils/atoms';
+import { useAtom } from 'jotai';
 
 export const DialogBox = ({
-  speed = 50,
+  speed = 5,
   className = ""
 }) => {
   const [displayedText, setDisplayedText] = useState('');
-  const [isComplete, setIsComplete] = useState(false);
+  const [isComplete, setIsComplete] = useAtom(ready);
+
+  const { network: { playerEntity },
+    components: { Page },
+  } = useMUD();
+
+  const page = Number(useComponentValue(Page, playerEntity)?.value ?? 0);
 
   const text = useDialogText(isComplete);
 
@@ -34,9 +44,9 @@ export const DialogBox = ({
     <div className={twMerge(`relative text-white p-4 w-full h-full flex items-start border-2 border-white rounded-lg shadow-white m-2`, className)}>
       <p className="font-mono font-bold text-2xl">
         {displayedText}
-        <span className="animate-pulse">|</span>
+        {!isComplete && <span className="animate-pulse">|</span>}
       </p>
-      {isComplete && (
+      {isComplete && page !== 6 && (
         <p className="text-sm absolute bottom-0 right-0 p-2">
           Press enter to continue
         </p>

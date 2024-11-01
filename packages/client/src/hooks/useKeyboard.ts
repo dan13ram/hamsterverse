@@ -12,17 +12,10 @@ export const useKeyboard = () => {
   const [accept, setAccept] = useState(false);
 
   const {
-    components: { MapConfig, Position, Movable },
+    components: { Position, Movable },
     network: { playerEntity },
     systemCalls: { move: moveSystemCall },
   } = useMUD();;
-
-  const mapConfig = useComponentValue(MapConfig, playerEntity);
-  if (mapConfig == null) {
-    throw new Error(
-      "map config not set or not ready, only use this hook after loading state === LIVE"
-    );
-  }
 
   const position = useComponentValue(Position, playerEntity);
 
@@ -32,7 +25,15 @@ export const useKeyboard = () => {
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
-      e.preventDefault();
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (!isConnected) {
+          openConnectModal?.();
+          return;
+        }
+        setAccept(true);
+        return;
+      }
       if (movable?.value === false) {
         return;
       }
@@ -47,12 +48,6 @@ export const useKeyboard = () => {
       }
       if (e.key === "d") {
         move(Direction.East);
-      }
-      if (e.key === "Enter") {
-        setAccept(true);
-        if (!isConnected) {
-          openConnectModal?.();
-        }
       }
     };
 

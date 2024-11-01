@@ -1,14 +1,14 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { LandingPage } from "./LandingPage";
+import { LandingPage } from "../components/LandingPage";
 import { useAccount } from "wagmi";
 import { Game } from "../components/Game";
+import { GameControls } from "../components/GameControls";
 import { useRef } from "react";
 import { useEffect, useCallback } from "react";
 import { DialogBox } from "../components/DialogBox";
 import { twMerge } from "tailwind-merge";
 
-//const dev = import.meta.env.DEV;
-const dev = false;
+const dev = import.meta.env.DEV;
 
 export const Root = () => {
   const { isConnected } = useAccount();
@@ -70,12 +70,11 @@ export const Root = () => {
       <div className="relative flex-col items-center justify-center w-full h-full hidden lg:flex">
         <div className={twMerge("w-full flex flex-row items-center justify-between gap-4 p-8", dev ? "bg-red-900" : "bg-black")}>
           <p className="text-5xl font-heading tracking-wide">HAMSTERVERSE</p>
-          {isConnected && (
+          {isConnected &&
             <ConnectButton
-              chainStatus="none"
               showBalance={false}
             />
-          )}
+          }
         </div>
         <div className={twMerge("w-full flex-grow relative overflow-hidden flex flex-row justify-center items-center", dev ? "bg-red-700" : "bg-black")}>
           <div
@@ -91,8 +90,9 @@ export const Root = () => {
               </div>
             </div>
           </div>
+          {isConnected && <GameControls />}
         </div>
-        <div ref={dialogRef} className={twMerge("overflow-hidden w-full flex flex-row items-center justify-center h-[100px]", dev ? "bg-red-900" : "bg-black")}>
+        <div ref={dialogRef} className={twMerge("overflow-hidden w-full flex flex-row items-center justify-center py-8 h-[164px]", dev ? "bg-red-900" : "bg-black")}>
           <DialogBox />
         </div>
       </div>

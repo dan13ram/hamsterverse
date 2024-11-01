@@ -29,7 +29,6 @@ contract MazeGeneratorSystem is System {
 
     Player.set(player, true);
     Position.set(player, x, y);
-    Movable.set(player, true);
     Winner.set(player, false);
     Page.set(player, 0);
   }
