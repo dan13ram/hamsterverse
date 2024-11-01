@@ -16,20 +16,17 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-// Import user types
-import { MonsterType } from "../common.sol";
-
-library Monster {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "Monster", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000004d6f6e73746572000000000000000000);
+library Page {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "Page", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462000000000000000000000000000050616765000000000000000000000000);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0001010001000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
 
   // Hex-encoded key schema of (bytes32)
   Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint8)
-  Schema constant _valueSchema = Schema.wrap(0x0001010000000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint256)
+  Schema constant _valueSchema = Schema.wrap(0x002001001f000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
@@ -66,85 +63,85 @@ library Monster {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 id) internal view returns (MonsterType value) {
+  function getValue(bytes32 id) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MonsterType(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 id) internal view returns (MonsterType value) {
+  function _getValue(bytes32 id) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MonsterType(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function get(bytes32 id) internal view returns (MonsterType value) {
+  function get(bytes32 id) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MonsterType(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _get(bytes32 id) internal view returns (MonsterType value) {
+  function _get(bytes32 id) internal view returns (uint256 value) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return MonsterType(uint8(bytes1(_blob)));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 id, MonsterType value) internal {
+  function setValue(bytes32 id, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 id, MonsterType value) internal {
+  function _setValue(bytes32 id, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function set(bytes32 id, MonsterType value) internal {
+  function set(bytes32 id, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
    * @notice Set value.
    */
-  function _set(bytes32 id, MonsterType value) internal {
+  function _set(bytes32 id, uint256 value) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = id;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked(uint8(value)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
 
   /**
@@ -171,7 +168,7 @@ library Monster {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(MonsterType value) internal pure returns (bytes memory) {
+  function encodeStatic(uint256 value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -181,7 +178,7 @@ library Monster {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(MonsterType value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+  function encode(uint256 value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(value);
 
     EncodedLengths _encodedLengths;

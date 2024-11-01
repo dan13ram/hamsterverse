@@ -17,10 +17,12 @@ type MoveBatchItem = {
 
 const positionOverrideID = uuid();
 const moveOverrideID = uuid();
+const pageOverrideID = uuid();
+const mapConfigOverrideID = uuid();
 
 export function createSystemCalls(
   { playerEntity, worldContract, waitForTransaction }: SetupNetworkResult,
-  { MapConfig, Winner, Player, Movable, Position }: ClientComponents,
+  { MapConfig, Winner, Player, Page, Movable, Position }: ClientComponents,
 ) {
   const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(
     2000,
@@ -89,12 +91,6 @@ export function createSystemCalls(
       return;
     }
 
-    //const inEncounter = !!getComponentValue(Encounter, playerEntity);
-    //if (inEncounter) {
-    //  console.warn("cannot move while in encounter");
-    //  return;
-    //}
-
     let { x: inputX, y: inputY } = position;
 
     let isWinner = false;
@@ -138,8 +134,7 @@ export function createSystemCalls(
     moveBatchQueue.addItem({ direction });
   };
 
-  const setMap = async (width: number, height: number, terrain: Hex) => {
-    //const mapConfigOverrideID = uuid();
+  const restartGame = async (width: number, height: number, terrain: Hex) => {
     //MapConfig.addOverride(mapConfigOverrideID, {
     //  entity: playerEntity,
     //  value: { width, height, terrain },
@@ -148,15 +143,49 @@ export function createSystemCalls(
       entity: playerEntity,
       value: { value: false },
     });
+    Page.addOverride(pageOverrideID, {
+      entity: playerEntity,
+      value: { value: 0 },
+    });
     const tx = await worldContract.write.setMap([width, height, terrain]);
     await waitForTransaction(tx);
-    Position.removeOverride(positionOverrideID);
+    //Position.removeOverride(positionOverrideID);
     //MapConfig.removeOverride(mapConfigOverrideID);
     Movable.removeOverride(moveOverrideID);
+    Page.removeOverride(pageOverrideID);
   };
+
+  const nextPage = async () => {
+    const page = Number(getComponentValue(Page, playerEntity)?.value ?? 0);
+    Page.addOverride(pageOverrideID, {
+      entity: playerEntity,
+      value: { value: (page + 1) % 10 },
+    });
+
+    const tx = await worldContract.write.nextPage();
+    await waitForTransaction(tx);
+
+    Page.removeOverride(pageOverrideID);
+  };
+
+  const prevPage = async () => {
+    const page = Number(getComponentValue(Page, playerEntity)?.value ?? 0);
+    Page.addOverride(pageOverrideID, {
+      entity: playerEntity,
+      value: { value: (page + 9) % 10 },
+    });
+
+    const tx = await worldContract.write.prevPage();
+    await waitForTransaction(tx);
+
+    Page.removeOverride(pageOverrideID);
+  };
+
 
   return {
     move,
-    setMap,
+    restartGame,
+    nextPage,
+    prevPage,
   };
 }

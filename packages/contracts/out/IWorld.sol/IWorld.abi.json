@@ -152,13 +152,6 @@
   },
   {
     "type": "function",
-    "name": "flee",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "getDynamicField",
     "inputs": [
       {
@@ -626,6 +619,13 @@
   },
   {
     "type": "function",
+    "name": "nextPage",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "popFromDynamicField",
     "inputs": [
       {
@@ -649,6 +649,13 @@
         "internalType": "uint256"
       }
     ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "prevPage",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
@@ -1110,24 +1117,6 @@
   },
   {
     "type": "function",
-    "name": "spawn",
-    "inputs": [
-      {
-        "name": "x",
-        "type": "int32",
-        "internalType": "int32"
-      },
-      {
-        "name": "y",
-        "type": "int32",
-        "internalType": "int32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "spliceDynamicData",
     "inputs": [
       {
@@ -1204,13 +1193,6 @@
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "throwBall",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",

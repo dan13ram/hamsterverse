@@ -4,14 +4,51 @@ import { GameBoard } from "./GameBoard";
 import { MazeGenerator } from "../utils/mazeGenerator";
 import { useState, useCallback } from "react";
 
+const DefaultPage = () => {
+  const {
+    components: { MapConfig, Page },
+    systemCalls: { nextPage, prevPage },
+    network: { playerEntity },
+  } = useMUD();
+
+  const page = Number(useComponentValue(Page, playerEntity)?.value ?? 0);
+
+  return (
+    <div className="relative flex flex-col items-center gap-4 bg-green-500 py-6 px-8 rounded-lg">
+      <h1 className="text-2xl">Page {page}</h1>
+      <div className="flex flex-row items-center gap-4">
+        <button
+          onClick={() => prevPage()}
+          className="py-2 px-8 bg-blue-500 rounded-md hover:bg-blue-100 hover:text-blue-900 border-white border-2"
+        >
+          Prev
+        </button>
+        <button
+          onClick={() => nextPage()}
+          className="py-2 px-8 bg-blue-500 rounded-md hover:bg-blue-100 hover:text-blue-900 border-white border-2"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const pageContent = [
+  <DefaultPage />,
+  <GameBoard />,
+  <DefaultPage />,
+];
+
 export const Game = () => {
   const {
-    components: { MapConfig },
-    systemCalls: { setMap },
+    components: { MapConfig, Page },
+    systemCalls: { restartGame },
     network: { playerEntity },
   } = useMUD();
 
   const mapConfig = useComponentValue(MapConfig, playerEntity);
+  const page = Number(useComponentValue(Page, playerEntity)?.value ?? 0);
 
   const [size, setSize] = useState(14);
 
@@ -29,12 +66,12 @@ export const Game = () => {
       maze.generate();
     }
 
-    setMap(maze.size, maze.size, maze.bytes());
-  }, [setMap]);
+    restartGame(maze.size, maze.size, maze.bytes());
+  }, [restartGame]);
 
   return (
-    <div className="relative flex flex-col items-center gap-4 w-full h-full">
-      <div className="relative flex flex-row items-center gap-4">
+    <div className="flex flex-col items-center justify-center gap-4 w-full h-full">
+      <div className="absolute flex flex-col items-center gap-4 right-0 top-0">
         {import.meta.env.DEV && (
           <input
             type="number"
@@ -54,9 +91,7 @@ export const Game = () => {
           </button>
         )}
       </div>
-      <div className="relative flex flex-col items-center gap-4 bg-green-500 py-6 px-8 rounded-lg">
-        {mapConfig && <GameBoard />}
-      </div>
+      {mapConfig && (pageContent[page] ?? null)}
     </div>
   );
 };

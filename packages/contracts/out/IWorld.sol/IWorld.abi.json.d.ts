@@ -152,13 +152,6 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "flee",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "getDynamicField",
     "inputs": [
       {
@@ -626,6 +619,13 @@ declare const abi: [
   },
   {
     "type": "function",
+    "name": "nextPage",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "popFromDynamicField",
     "inputs": [
       {
@@ -649,6 +649,13 @@ declare const abi: [
         "internalType": "uint256"
       }
     ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "prevPage",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
@@ -1110,24 +1117,6 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "spawn",
-    "inputs": [
-      {
-        "name": "x",
-        "type": "int32",
-        "internalType": "int32"
-      },
-      {
-        "name": "y",
-        "type": "int32",
-        "internalType": "int32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "spliceDynamicData",
     "inputs": [
       {
@@ -1204,13 +1193,6 @@ declare const abi: [
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "throwBall",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",

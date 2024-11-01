@@ -4,12 +4,17 @@ import { useAccount } from "wagmi";
 import { Game } from "../components/Game";
 import { useRef } from "react";
 import { useEffect, useCallback } from "react";
+import { DialogBox } from "../components/DialogBox";
+import { twMerge } from "tailwind-merge";
+
+//const dev = import.meta.env.DEV;
+const dev = false;
 
 export const Root = () => {
   const { isConnected } = useAccount();
   const innerRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
-
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const updateSize = useCallback(() => {
     if (innerRef.current && outerRef.current) {
@@ -27,6 +32,10 @@ export const Root = () => {
         innerRef.current.style.width = `${outerRect.width}px`;
       } else if (innerRect.width < outerRect.width) {
         innerRef.current.style.width = "unset";
+      }
+
+      if (dialogRef.current) {
+        dialogRef.current.style.maxWidth = innerRect.width + "px";
       }
     }
   }, []);
@@ -59,17 +68,16 @@ export const Root = () => {
         <p>Small screens not supported</p>
       </div>
       <div className="relative flex-col items-center justify-center w-full h-full hidden lg:flex">
-        <div className="w-full flex flex-row items-center justify-between gap-4 p-8 bg-yellow-900">
-          <p className="text-xl">Hamsterverse</p>
+        <div className={twMerge("w-full flex flex-row items-center justify-between gap-4 p-8", dev ? "bg-red-900" : "bg-black")}>
+          <p className="text-5xl font-heading tracking-wide">HAMSTERVERSE</p>
           {isConnected && (
             <ConnectButton
-              accountStatus="full"
-              chainStatus="full"
+              chainStatus="none"
               showBalance={false}
             />
           )}
         </div>
-        <div className="w-full flex-grow relative overflow-hidden flex flex-row justify-center items-center">
+        <div className={twMerge("w-full flex-grow relative overflow-hidden flex flex-row justify-center items-center", dev ? "bg-red-700" : "bg-black")}>
           <div
             className="relative max-w-full max-h-full flex-grow object-contain"
             ref={outerRef}
@@ -78,14 +86,14 @@ export const Root = () => {
               className="bg-black object-contain aspect-video mx-auto my-auto p-2"
               ref={innerRef}
             >
-              <div className="flex items-center justify-center w-full h-full overflow-hidden">
+              <div className="flex relative items-center justify-center w-full h-full overflow-hidden">
                 {!isConnected ? <LandingPage /> : <Game />}
               </div>
             </div>
           </div>
         </div>
-        <div className="w-full flex flex-row items-center justify-center gap-4 p-8 bg-yellow-900">
-          <p className="text-xl">Hamsterverse Footer</p>
+        <div ref={dialogRef} className={twMerge("overflow-hidden w-full flex flex-row items-center justify-center h-[100px]", dev ? "bg-red-900" : "bg-black")}>
+          <DialogBox />
         </div>
       </div>
     </>

@@ -13,7 +13,7 @@ export const LandingPage = () => {
       <div className="absolute inset-0 z-0 w-full h-full bg-image bg-size-[100%_100%] bg-repeat-x animate-scroll-right" style={{ backgroundImage: `url(${clouds2})` }} />
       <ConnectButton.Custom>
         {({ openConnectModal }) => {
-          return (<img src={tower} className="absolute inset-0 z-0 w-full h-full hover:scale-110 transition-transform cursor-pointer duration-[1000ms]" alt="tower"
+          return (<img src={tower} className="absolute inset-0 z-0 w-full h-full hover:scale-110 transition-transform cursor-pointer duration-[1000ms] animate-up" alt="tower"
             onClick={() => openConnectModal()} />);
         }}
       </ConnectButton.Custom>

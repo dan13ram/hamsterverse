@@ -2,7 +2,7 @@ out/*
 !out/IWorld.sol
 !out/MapSystem.sol
 !out/MazeGeneratorSystem.sol
-!out/EncounterSystem.sol
+!out/ComicSystem.sol
 cache/
 node_modules/
 bindings/

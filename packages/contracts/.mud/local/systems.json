@@ -2,17 +2,17 @@
   "systems": [
     {
       "namespaceLabel": "",
-      "label": "EncounterSystem",
+      "label": "ComicSystem",
       "namespace": "",
-      "name": "EncounterSystem",
-      "systemId": "0x73790000000000000000000000000000456e636f756e74657253797374656d00",
+      "name": "ComicSystem",
+      "systemId": "0x73790000000000000000000000000000436f6d696353797374656d0000000000",
       "abi": [
-        "function flee()",
-        "function throwBall()"
+        "function nextPage()",
+        "function prevPage()"
       ],
       "worldAbi": [
-        "function flee()",
-        "function throwBall()"
+        "function nextPage()",
+        "function prevPage()"
       ]
     },
     {
@@ -22,12 +22,10 @@
       "name": "MapSystem",
       "systemId": "0x737900000000000000000000000000004d617053797374656d00000000000000",
       "abi": [
-        "function move(uint8 direction)",
-        "function spawn(int32 x, int32 y)"
+        "function move(uint8 direction)"
       ],
       "worldAbi": [
-        "function move(uint8 direction)",
-        "function spawn(int32 x, int32 y)"
+        "function move(uint8 direction)"
       ]
     },
     {
@@ -44,5 +42,5 @@
       ]
     }
   ],
-  "createdAt": 1730401538026
+  "createdAt": 1730445840669
 }

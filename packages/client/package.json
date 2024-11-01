@@ -12,6 +12,8 @@
     "test": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource/courier-prime": "^5.1.0",
+    "@fontsource/creepster": "^5.1.0",
     "@latticexyz/common": "2.2.14",
     "@latticexyz/dev-tools": "2.2.14",
     "@latticexyz/faucet": "2.2.14",

@@ -35,6 +35,15 @@ importers:
 
   packages/client:
     dependencies:
+      '@fontsource/acme':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource/courier-prime':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource/creepster':
+        specifier: ^5.1.0
+        version: 5.1.0
       '@latticexyz/common':
         specifier: 2.2.14
         version: 2.2.14(@aws-sdk/client-kms@3.682.0)(asn1.js@5.4.1)(bufferutil@4.0.8)(typescript@5.4.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -1435,6 +1444,15 @@ packages:
 
   '@fastify/merge-json-schemas@0.1.1':
     resolution: {integrity: sha512-fERDVz7topgNjtXsJTTW1JKLy0rhuLRcquYqNR9rF7OcVpCa2OVW49ZPDIhaRRCaUuvVxI+N416xUoF76HNSXA==}
+
+  '@fontsource/acme@5.1.0':
+    resolution: {integrity: sha512-euAHRVTwxmaHh0lzGDaWGeNRJeq3YI8FIHglKvJxflK/9rVfgUm+SpzOrifXjHajsGL3dp/viC0qFl/vFAkKCg==}
+
+  '@fontsource/courier-prime@5.1.0':
+    resolution: {integrity: sha512-yCPhcX/h6oOL8qBbT7lVKDbJzloaUqaLdS8g/YkohO9L0hcrFhOEPhWvuQOzxXIJbmyCVGDW8i2sNnc+OSw7dw==}
+
+  '@fontsource/creepster@5.1.0':
+    resolution: {integrity: sha512-khP1Fqo/tgsal8UKO+yjT0XqIWL2lQ3S+BIa6LsKDloF3zLNAQHmUL+jutRZwBWELsOcHkqEW8ogPvASGdjUog==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -7687,6 +7705,12 @@ snapshots:
   '@fastify/merge-json-schemas@0.1.1':
     dependencies:
       fast-deep-equal: 3.1.3
+
+  '@fontsource/acme@5.1.0': {}
+
+  '@fontsource/courier-prime@5.1.0': {}
+
+  '@fontsource/creepster@5.1.0': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:

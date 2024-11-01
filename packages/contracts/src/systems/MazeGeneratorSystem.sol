@@ -2,10 +2,9 @@
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Encounter, EncounterData, Encounterable, EncounterTrigger, MapConfig, Monster, Movable, Obstruction, Player, Position, Winner } from "../codegen/index.sol";
+import { MapConfig, Movable, Player, Position, Winner, Page } from "../codegen/index.sol";
 
 import { addressToEntityKey } from "../addressToEntityKey.sol";
-import { TerrainType } from "../codegen/common.sol";
 
 contract MazeGeneratorSystem is System {
   function setMap(uint32 width, uint32 height, bytes memory terrain) public {
@@ -32,6 +31,6 @@ contract MazeGeneratorSystem is System {
     Position.set(player, x, y);
     Movable.set(player, true);
     Winner.set(player, false);
-    Encounterable.set(player, false);
+    Page.set(player, 0);
   }
 }

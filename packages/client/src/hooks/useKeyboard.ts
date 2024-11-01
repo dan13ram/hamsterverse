@@ -1,10 +1,16 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useMUD } from "../contexts/MUDContext";
 import { Direction } from "../utils/direction";
 import { useComponentValue } from "@latticexyz/react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 
 
-export const useKeyboardMovement = () => {
+export const useKeyboard = () => {
+  const { openConnectModal } = useConnectModal();
+  const { isConnected } = useAccount();
+  const [accept, setAccept] = useState(false);
+
   const {
     components: { MapConfig, Position, Movable },
     network: { playerEntity },
@@ -18,8 +24,6 @@ export const useKeyboardMovement = () => {
     );
   }
 
-  const { width, height } = mapConfig;
-
   const position = useComponentValue(Position, playerEntity);
 
   const movable = useComponentValue(Movable, playerEntity);
@@ -28,29 +32,42 @@ export const useKeyboardMovement = () => {
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
+      e.preventDefault();
       if (movable?.value === false) {
         return;
       }
-      if (e.key === "ArrowUp" || e.key === "w") {
+      if (e.key === "w") {
         move(Direction.North);
       }
-      if (e.key === "ArrowDown" || e.key === "s") {
-        if (position?.y === height - 1 && position?.x === width - 2) {
-          console.log("win");
-        }
+      if (e.key === "s") {
         move(Direction.South);
       }
-      if (e.key === "ArrowLeft" || e.key === "a") {
+      if (e.key === "a") {
         move(Direction.West);
       }
-      if (e.key === "ArrowRight" || e.key === "d") {
+      if (e.key === "d") {
         move(Direction.East);
+      }
+      if (e.key === "Enter") {
+        setAccept(true);
+        if (!isConnected) {
+          openConnectModal?.();
+        }
       }
     };
 
     window.addEventListener("keydown", listener);
     return () => window.removeEventListener("keydown", listener);
-  }, [move, position]);
+  }, [move, position, isConnected, openConnectModal]);
+
+  const reset = useCallback(() => {
+    setAccept(false);
+  }, []);
+
+  return {
+    accept,
+    reset,
+  };
 };
 
 /**

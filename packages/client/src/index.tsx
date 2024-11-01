@@ -1,6 +1,8 @@
 import "tailwindcss/tailwind.css";
 import "react-toastify/dist/ReactToastify.css";
 import '@rainbow-me/rainbowkit/styles.css';
+import '@fontsource/courier-prime';
+import '@fontsource/creepster';
 
 import ReactDOM from "react-dom/client";
 import { ToastContainer } from "react-toastify";
@@ -17,6 +19,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { wagmiConfig } from "./wallet/config";
+import { rainbowTheme } from "./wallet/theme";
 
 const rootElement = document.getElementById("react-root");
 if (!rootElement) throw new Error("React root not found");
@@ -29,7 +32,7 @@ setup().then(async (result) => {
   root.render(
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider theme={rainbowTheme}>
           <MUDProvider value={result}>
             <App />
             <ToastContainer position="bottom-right" draggable={false} theme="dark" />

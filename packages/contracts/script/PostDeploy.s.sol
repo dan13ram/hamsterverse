@@ -6,8 +6,7 @@ import { console } from "forge-std/console.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { EncounterTrigger, MapConfig, Obstruction, Position } from "../src/codegen/index.sol";
-import { TerrainType } from "../src/codegen/common.sol";
+import { MapConfig, Position } from "../src/codegen/index.sol";
 import { positionToEntityKey } from "../src/positionToEntityKey.sol";
 
 contract PostDeploy is Script {
