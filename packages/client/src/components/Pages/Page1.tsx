@@ -44,7 +44,7 @@ export const Page1 = () => {
           src={bg1}
         />
       </div>
-      <div className="absolute bottom-0 right-0 w-[35%] h-[54%] p-16 flex flex-col items-center justify-center text-right">
+      <div className="absolute bottom-0 right-0 w-[45%] h-[40%] p-16 flex flex-col items-center justify-center">
         <TextBox text="The hamsters feast on nutrient paste, eternally bathed in the sickly sweet glow of bioluminescent fungi, their minds dulled by pheromones pumped through the ventilation shafts." />
 
       </div>

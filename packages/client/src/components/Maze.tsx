@@ -69,7 +69,9 @@ export const Maze = () => {
   if (winner?.value === true) {
     return (
       <div className="flex flex-col items-center gap-8 w-full">
-        <h1 className="text-2xl">You Escaped the Labyrinth! Level 1 Complete.</h1>
+        <div>
+          <TextBox text="You Escaped the Labyrinth! Level 1 Complete." />
+        </div>
         <button
           className="border-2 border-white rounded-md hover:bg-[#202020]"
           onClick={restart}

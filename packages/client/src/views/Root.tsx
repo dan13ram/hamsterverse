@@ -8,7 +8,7 @@ import { useEffect, useCallback } from "react";
 import { DialogBox } from "../components/DialogBox";
 import { twMerge } from "tailwind-merge";
 
-const dev = import.meta.env.DEV;
+const dev = false; //import.meta.env.DEV;
 
 export const Root = () => {
   const { isConnected } = useAccount();

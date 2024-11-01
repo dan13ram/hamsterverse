@@ -7,7 +7,7 @@ import { ready } from '../utils/atoms';
 import { useAtom } from 'jotai';
 
 export const DialogBox = ({
-  speed = 5,
+  speed = 50,
   className = ""
 }) => {
   const [displayedText, setDisplayedText] = useState('');

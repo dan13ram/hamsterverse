@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useDialogText } from '../hooks/useDialogText';
 
 export const TextBox = ({
   text = "Sample text",
-  speed = 5,
+  speed = 50,
   className = ""
 }) => {
   const [displayedText, setDisplayedText] = useState('');
