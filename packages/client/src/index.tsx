@@ -40,7 +40,7 @@ setup().then(async (result) => {
   );
 
   // https://vitejs.dev/guide/env-and-mode.html
-  if (import.meta.env.DEV || import.meta.env.VITE_CHAIN_ID === "17069") {
+  if (import.meta.env.DEV) {
     const { mount: mountDevTools } = await import("@latticexyz/dev-tools");
     mountDevTools({
       config: mudConfig,

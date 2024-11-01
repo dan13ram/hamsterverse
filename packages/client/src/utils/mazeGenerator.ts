@@ -13,9 +13,8 @@ export class MazeGenerator {
   }
 
   generate() {
-    const randomTerrain = Math.floor(Math.random() * 2) + 1;
     // Start with all walls
-    this.maze = Array(this.size).fill(1).map(() => Array(this.size).fill(randomTerrain));
+    this.maze = Array(this.size).fill(1).map(() => Array(this.size).fill(1));
 
     // Carve from the entrance
     this.carve(1, 1);
@@ -24,6 +23,15 @@ export class MazeGenerator {
     this.maze[0][1] = 0;
     this.maze[this.size - 1][this.size - 2] = 0;
 
+    for (let i = 0; i < this.size; i++) {
+      let line = '';
+      for (let j = 0; j < this.size; j++) {
+        if (this.maze[i][j] !== 0) {
+          this.maze[i][j] = Math.floor(Math.random() * 2) + 1;
+        }
+        line += this.maze[i][j];
+      }
+    }
     return this.maze;
   }
 
@@ -47,7 +55,7 @@ export class MazeGenerator {
         dy: dy / 2
       }))
       .filter(({ x, y }) =>
-        this.isValidPosition(x, y) && this.maze[x][y] === 1
+        this.isValidPosition(x, y) && this.maze[x][y] !== 0
       );
   }
 
@@ -109,7 +117,14 @@ export class MazeGenerator {
   }
 
   bytes(): Hex {
-    return `0x${this.maze.map(row => row.map(cell => cell ? "02" : "00").join("")).join("")}`;
+    return `0x${this.maze.map(row => row.map(numToBinary).join("")).join("")}`;
   }
 
+}
+
+function numToBinary(num: number | undefined | null): string {
+  if (!num) {
+    return '00';
+  }
+  return num.toString().padStart(2, '0');
 }

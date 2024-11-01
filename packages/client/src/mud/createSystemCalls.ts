@@ -11,51 +11,44 @@ import { encodeFunctionData } from "viem";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
-
 type MoveBatchItem = {
   direction: Direction;
-}
+};
 
 const positionOverrideID = uuid();
 const moveOverrideID = uuid();
 
 export function createSystemCalls(
   { playerEntity, worldContract, waitForTransaction }: SetupNetworkResult,
-  {
-    MapConfig,
-    Winner,
-    Player,
-    Movable,
-    Position,
-  }: ClientComponents
+  { MapConfig, Winner, Player, Movable, Position }: ClientComponents,
 ) {
-
-
-  const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(2000, async (batch: MoveBatchItem[]) => {
-
-    const resourceId = resourceToHex({
-      type: "system",
-      namespace: "",
-      name: "MapSystem",
-    });
-
-    const tasks = batch.map(({ direction }) => {
-      const data = encodeFunctionData({
-        abi: worldContract.abi,
-        functionName: "move",
-        args: [direction],
+  const moveBatchQueue = new BatchProcessingQueue<MoveBatchItem>(
+    2000,
+    async (batch: MoveBatchItem[]) => {
+      const resourceId = resourceToHex({
+        type: "system",
+        namespace: "",
+        name: "MapSystem",
       });
 
-      return [resourceId, data];
-    });
+      const tasks = batch.map(({ direction }) => {
+        const data = encodeFunctionData({
+          abi: worldContract.abi,
+          functionName: "move",
+          args: [direction],
+        });
 
-    try {
-      const tx = worldContract.write.batchCall([tasks]);
-      await waitForTransaction(tx);
-    } finally {
-    }
+        return [resourceId, data];
+      });
 
-  }, 20);
+      try {
+        const tx = worldContract.write.batchCall([tasks]);
+        await waitForTransaction(tx);
+      } finally {
+      }
+    },
+    20,
+  );
 
   const wrapPosition = (x: number, y: number) => {
     const mapConfig = getComponentValue(MapConfig, playerEntity);
@@ -105,10 +98,13 @@ export function createSystemCalls(
     let { x: inputX, y: inputY } = position;
 
     let isWinner = false;
-    if (inputY === height - 1 && inputX === width - 2 && direction === Direction.South) {
+    if (
+      inputY === height - 1 &&
+      inputX === width - 2 &&
+      direction === Direction.South
+    ) {
       isWinner = true;
     }
-
 
     if (direction === Direction.North) {
       inputY -= 1;
@@ -143,15 +139,19 @@ export function createSystemCalls(
   };
 
   const setMap = async (width: number, height: number, terrain: Hex) => {
-    const mapConfigOverrideID = uuid();
-    MapConfig.addOverride(mapConfigOverrideID, {
+    //const mapConfigOverrideID = uuid();
+    //MapConfig.addOverride(mapConfigOverrideID, {
+    //  entity: playerEntity,
+    //  value: { width, height, terrain },
+    //});
+    Movable.addOverride(moveOverrideID, {
       entity: playerEntity,
-      value: { width, height, terrain },
+      value: { value: false },
     });
     const tx = await worldContract.write.setMap([width, height, terrain]);
     await waitForTransaction(tx);
     Position.removeOverride(positionOverrideID);
-    MapConfig.removeOverride(mapConfigOverrideID);
+    //MapConfig.removeOverride(mapConfigOverrideID);
     Movable.removeOverride(moveOverrideID);
   };
 
